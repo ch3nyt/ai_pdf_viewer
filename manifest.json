@@ -1,0 +1,37 @@
+{
+  "name": "AI PDF Reader Extension",
+  "description": "Intercept PDFs and open them in a custom AI-powered viewer.",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "file:///*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "AI PDF Reader"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/viewer/*",
+        "src/styles/*",
+        "src/common/*",
+        "src/vendor/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

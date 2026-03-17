@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI PDF Reader</title>
+    <link rel="stylesheet" href="../styles/viewer.css" />
+  </head>
+  <body>
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <button id="prev-page" type="button">Prev</button>
+        <button id="next-page" type="button">Next</button>
+        <span id="page-indicator">Page - / -</span>
+      </div>
+      <div class="toolbar-center">
+        <button id="zoom-out" type="button">-</button>
+        <span id="zoom-indicator">100%</span>
+        <button id="zoom-in" type="button">+</button>
+        <button id="toggle-manual-capture" type="button">Box Select</button>
+      </div>
+      <div class="toolbar-right">
+        <span id="pdf-id">PDF ID: -</span>
+      </div>
+    </header>
+
+    <main id="viewer-layout">
+      <section id="viewer-container">
+        <div id="loading-state">Loading PDF...</div>
+        <section id="local-open-panel" class="panel-content hidden">
+          <h3>開啟本機 PDF</h3>
+          <p class="small-muted">可直接選檔或拖放 PDF 到此區域。</p>
+          <input id="local-pdf-input" type="file" accept="application/pdf,.pdf" />
+          <div id="drop-zone">Drop PDF here</div>
+        </section>
+        <div id="pages-root"></div>
+      </section>
+      <div id="inline-note-popover" class="inline-note-popover hidden">
+        <div class="inline-note-header">
+          <strong id="inline-note-title">Note</strong>
+          <button id="inline-note-close" type="button">×</button>
+        </div>
+        <div id="inline-note-preview" class="inline-note-preview"></div>
+        <textarea id="inline-note-input" rows="6"></textarea>
+        <div class="inline-note-actions">
+          <button id="inline-note-edit" type="button">Edit</button>
+          <button id="inline-note-save" type="button">Save</button>
+          <button id="inline-note-delete" type="button">Delete</button>
+        </div>
+      </div>
+      <div id="inline-chat-popover" class="inline-chat-popover hidden">
+        <div class="inline-note-header" id="inline-chat-header">
+          <strong>AI Chat</strong>
+          <button id="inline-chat-close" type="button">×</button>
+        </div>
+        <div id="inline-chat-messages" class="inline-chat-messages"></div>
+        <label class="check-row">
+          <input id="inline-chat-context" type="checkbox" checked />
+          附帶目前選取區域上下文
+        </label>
+        <textarea id="inline-chat-input" rows="3" placeholder="輸入問題（Cmd/Ctrl+Enter 送出）"></textarea>
+        <div class="inline-note-actions">
+          <button id="inline-chat-send" type="button">Send</button>
+        </div>
+      </div>
+      <aside id="sidebar">
+        <section class="sidebar-section">
+          <h2>AI 回覆</h2>
+          <div id="ai-response" class="panel-content">尚未產生 AI 回覆。</div>
+          <div class="note-actions">
+            <button id="edit-current-annotation" type="button" disabled>Edit</button>
+            <button id="delete-current-annotation" type="button" disabled>Delete</button>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
+          <h2>設定</h2>
+          <label class="small-muted" for="setting-model">Vision Model</label>
+          <input id="setting-model" type="text" placeholder="gpt-4o" />
+          <label class="small-muted" for="setting-chat-model">Chat Model</label>
+          <input id="setting-chat-model" type="text" placeholder="gpt-4o-mini" />
+          <label class="small-muted" for="setting-api-key">OpenAI API Key</label>
+          <input id="setting-api-key" type="password" placeholder="sk-..." />
+          <label class="check-row">
+            <input id="setting-use-mock" type="checkbox" checked />
+            使用 Mock 回覆（開發用）
+          </label>
+          <button id="save-settings" type="button">Save Settings</button>
+        </section>
+
+        <section class="sidebar-section">
+          <h2>註解列表</h2>
+          <div class="chat-thread-row">
+            <label class="small-muted" for="annotation-sort">排序</label>
+            <select id="annotation-sort">
+              <option value="updated_desc">時間（新到舊）</option>
+              <option value="updated_asc">時間（舊到新）</option>
+              <option value="page_asc">頁碼（小到大）</option>
+              <option value="page_desc">頁碼（大到小）</option>
+            </select>
+          </div>
+          <div id="annotation-list" class="panel-content"></div>
+        </section>
+
+        <section id="note-editor" class="sidebar-section hidden">
+          <h2 data-role="note-title">New Note</h2>
+          <textarea
+            data-role="note-input"
+            id="note-input"
+            rows="6"
+            placeholder="支援 Markdown + LaTeX，例如 $\\beta$ 或 $$\\sum_i x_i$$"
+          ></textarea>
+          <h3>預覽</h3>
+          <div data-role="note-preview" id="note-preview" class="panel-content"></div>
+          <div class="note-actions">
+            <button data-role="note-save" type="button">Save Note</button>
+            <button data-role="note-cancel" type="button">Cancel</button>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./viewer.js"></script>
+  </body>
+</html>
